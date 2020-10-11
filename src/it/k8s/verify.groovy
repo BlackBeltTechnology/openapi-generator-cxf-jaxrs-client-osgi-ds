@@ -27,5 +27,3 @@ def runCommand = { strList ->
 }
 
 runCommand("mvn clean test")
-
-System.exit(0)
