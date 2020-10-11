@@ -1,5 +1,11 @@
 = JaxRS CXF Client OSGi bundle generator Plugin
 
+[link=https://app.wercker.com/project/byKey/3102cbdcf8daab51d5228ec742499f0e]
+image:https://app.wercker.com/status/3102cbdcf8daab51d5228ec742499f0e/s/develop[wercker status]
+
+[link=https://app.wercker.com/project/byKey/3102cbdcf8daab51d5228ec742499f0e]
+image:https://app.wercker.com/status/3102cbdcf8daab51d5228ec742499f0e/m/[wercker status]
+
 This plugin designed for use by the OpenAPi v3 Maven Plugin, but works with the
 command line generator and the Gradle plugin. It generates CXF JaxRS client and OSGi activator
 which can register the Client API web clients as an OSGi declarative service.
