@@ -1,0 +1,118 @@
+package {{activatorPackage}};
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import org.apache.cxf.ext.logging.LoggingFeature;
+import org.apache.cxf.jaxrs.client.ClientConfiguration;
+import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+
+import java.util.*;
+
+@Component(immediate = true {{#activatorDsConfigurationRequired}}, configurationPolicy = ConfigurationPolicy.REQUIRE{{/activatorDsConfigurationRequired}})
+@Designate(ocd = ClientApiServiceActivator.Config.class)
+public class ClientApiServiceActivator  {
+
+    @ObjectClassDefinition()
+    public @interface Config {
+
+        @AttributeDefinition(required = false)
+        String endPoint() default "{{basePath}}";
+
+        @AttributeDefinition(required = false)
+        boolean log_payload() default {{useLoggingFeature}};
+
+        @AttributeDefinition(required = false)
+        int log_payload_limit() default 1000;
+
+        @AttributeDefinition(required = false)
+        int connection_timeout() default 10000;
+
+        @AttributeDefinition(required = false)
+        int receive_timeout() default 15000;
+    }
+
+    Map<Class, ServiceRegistration> registeredServices = new HashMap();
+
+    @Activate
+    public void activate(Config config, ComponentContext context) {
+{{#apiInfo}}
+    {{#apis}}
+        registerService(config, context, {{package}}.{{classname}}.class);
+    {{/apis}}
+{{/apiInfo}}
+    }
+
+    @Activate
+    public void deactivate(Config config, ComponentContext context) {
+{{#apiInfo}}
+    {{#apis}}
+        unregisterService(config, context, {{package}}.{{classname}}.class);
+    {{/apis}}
+{{/apiInfo}}
+    }
+
+    public void unregisterService(Config config, ComponentContext context, Class clazz) {
+        if (registeredServices.containsKey(clazz)) {
+            registeredServices.remove(clazz).unregister();
+        }
+    }
+
+    public void registerService(Config config, ComponentContext context, Class clazz) {
+
+        Boolean logPayload = config.log_payload();
+        Integer logPayloadLimit = config.log_payload_limit();
+        Integer connectionTimeout = config.connection_timeout();
+        Integer receiveTimeout = config.receive_timeout();
+
+        JacksonJsonProvider provider = new JacksonJsonProvider();
+        List providers = new ArrayList();
+        providers.add(provider);
+
+        List features = new ArrayList();
+        if (logPayload) {
+            final LoggingFeature logging=new LoggingFeature();
+            logging.setLimit(logPayloadLimit);
+            logging.setPrettyLogging(true);
+            features.add(logging);
+        }
+
+        Object api = JAXRSClientFactory.create(config.endPoint(), clazz, providers, features, null);
+        org.apache.cxf.jaxrs.client.Client client = WebClient.client(api);
+
+        ClientConfiguration clientConfig = WebClient.getConfig(client);
+
+        {{#useGzipFeature}}
+            // Example for using Gzipping
+            GZIPOutInterceptor gzipOutInterceptor = new GZIPOutInterceptor();
+            // use Gzipping for first request sent to server
+            //gzipOutInterceptor.setForce(true);
+            clientConfig.getOutInterceptors().add(gzipOutInterceptor);
+
+            clientConfig.getInInterceptors().add(new GZIPInInterceptor());
+        {{/useGzipFeature}}
+
+        {{#useLoggingFeature}}
+            LoggingOutInterceptor loggingOutInterceptor = new LoggingOutInterceptor();
+            clientConfig.getOutInterceptors().add(loggingOutInterceptor);
+        {{/useLoggingFeature}}
+
+        HTTPConduit http = (HTTPConduit) clientConfig.getConduit();
+        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+        httpClientPolicy.setConnectionTimeout(connectionTimeout);
+        httpClientPolicy.setReceiveTimeout(receiveTimeout);
+        http.setClient(httpClientPolicy);
+
+        Hashtable props = new Hashtable();
+        registeredServices.put(clazz, context.getBundleContext().registerService(clazz.getName(), api, props));
+    }
+}
+
