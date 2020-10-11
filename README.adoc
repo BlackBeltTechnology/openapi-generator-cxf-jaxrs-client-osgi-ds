@@ -77,7 +77,7 @@ openApiGenerate {
 
 === Usage from the command line
 
-https://search.maven.org/search?q=a:hu.blackbelt.openapi.codegen.cxf-jaxrs-client-osgi-ds[Download the dart codegen plugin]
+https://search.maven.org/search?q=a:hu.blackbelt.openapi.codegen.cxf-jaxrs-client-osgi-ds[Download the cxf client osgi ds codegen plugin]
 (current version 1.0.0)
 
 https://search.maven.org/search?q=a:openapi-generator-cli[Download OpenAPI CLI]
