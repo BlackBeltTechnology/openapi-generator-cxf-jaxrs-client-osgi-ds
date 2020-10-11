@@ -72,11 +72,11 @@ openApiGenerate {
 
 === Usage from the command line
 
-https://search.maven.org/search?q=a:hu.blackbelt.openapi.codegen.cxf-jaxrs-client-osgi-ds
-Download the dart codegen plugin (current version 1.0.0)
+https://search.maven.org/search?q=a:hu.blackbelt.openapi.codegen.cxf-jaxrs-client-osgi-ds[Download the dart codegen plugin]
+(current version 1.0.0)
 
-https://search.maven.org/search?q=a:openapi-generator-cli
-Download OpenAPI CLI (group id: org.openapitools, current version: 4.3.1)
+https://search.maven.org/search?q=a:openapi-generator-cli[Download OpenAPI CLI]
+(group id: org.openapitools, current version: 4.3.1)
 
 From the folder where you downloaded the above run the following command:
 ----
