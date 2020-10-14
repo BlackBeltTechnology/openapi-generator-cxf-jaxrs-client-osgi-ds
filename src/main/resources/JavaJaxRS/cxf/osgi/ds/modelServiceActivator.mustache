@@ -10,6 +10,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
@@ -51,7 +52,7 @@ public class ClientApiServiceActivator  {
 {{/apiInfo}}
     }
 
-    @Activate
+    @Deactivate
     public void deactivate(Config config, ComponentContext context) {
 {{#apiInfo}}
     {{#apis}}

@@ -12,7 +12,7 @@ public class SampleRunner {
     OpenAPIGenerator.main(Arrays.asList("generate",
       "--input-spec", location,
       "--generator-name", "jaxrs-cxf-client-osgi-ds",
-      "--additional-properties", "pubName=sample_app",
+      "--additional-properties", "pubName=sample_app", "--additional-properties", "activatorPackage=org.activator",
       "--output", "target/" + getClass().getSimpleName())
       .toArray(new String[0]));
   }

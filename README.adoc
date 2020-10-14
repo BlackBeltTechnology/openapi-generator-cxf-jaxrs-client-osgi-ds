@@ -9,37 +9,61 @@ This plugin designed for use by the OpenAPi v3 Maven Plugin, but works with the
 command line generator and the Gradle plugin. It generates CXF JaxRS client and OSGi activator
 which can register the Client API web clients as an OSGi declarative service.
 
+=== Release notes
+
+==== 1.0.1
+- Fixing @Deactivate method - there was two activate method presented
+- Fixing import range of jaxrs API (Support 1.1 - 3.0)
+- Hanling activationPackage parameter
+- Handling all parameters handling
+
+==== 1.0.0
+- First release
+
 === Usage in Maven
 
 To use it, do something like this:
 
 -----
-      <plugin>
+    <plugin>
         <groupId>org.openapitools</groupId>
         <artifactId>openapi-generator-maven-plugin</artifactId>
         <version>4.3.1</version>
         <dependencies>
-          <dependency>
-            <groupId>hu.blackbelt</groupId>
-            <artifactId>hu.blackbelt.openapi.codegen.cxf-jaxrs-client-osgi-ds</artifactId>
-            <version>1.0.0</version>
-          </dependency>
+            <dependency>
+                <groupId>hu.blackbelt</groupId>
+                <artifactId>hu.blackbelt.openapi.codegen.cxf-jaxrs-client-osgi-ds</artifactId>
+                <version>1.0.1</version>
+            </dependency>
         </dependencies>
         <executions>
-          <execution>
-            <id>mr-api</id>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <phase>generate-sources</phase>
-            <configuration>
-              <output>${project.basedir}/target/generated</output>
-              <inputSpec>${project.basedir}/target/mrapi/mr-api.yaml</inputSpec>
-              <generatorName>jaxrs-cxf-client-osgi-ds</generatorName>
-            </configuration>
-          </execution>
+            <execution>
+                <id>jaxrs-cxf-client-osgi-ds</id>
+                <goals>
+                    <goal>generate</goal>
+                </goals>
+                <phase>generate-sources</phase>
+                <configuration>
+                    <output>${project.basedir}</output>
+                    <inputSpec>${project.basedir}/example-openapi.yaml</inputSpec>
+                    <generatorName>jaxrs-cxf-client-osgi-ds</generatorName>
+                    <apiPackage>org.example.api</apiPackage>
+                    <modelPackage>org.example.model</modelPackage>
+                    <artifactId>example-api</artifactId>
+                    <groupId>org.example</groupId>
+                    <artifactVersion>1.0.0-SNAPSHOT</artifactVersion>
+                    <additionalProperties>
+                        <additionalProperty>
+                            activatorPackage=org.example.activator
+                        </additionalProperty>
+                        <additionalProperty>
+                            java8=true
+                        </additionalProperty>
+                    </additionalProperties>
+                </configuration>
+            </execution>
         </executions>
-      </plugin>
+    </plugin>
 -----
 
 === Usage in Gradle
