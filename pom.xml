@@ -4,7 +4,7 @@
 
     <groupId>hu.blackbelt</groupId>
     <artifactId>hu.blackbelt.openapi.codegen.cxf-jaxrs-client-osgi-ds</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <name>Blackbelt :: OpeanAPI :: Codegen :: CXF JaxRS OSGi service client</name>
     <properties>
