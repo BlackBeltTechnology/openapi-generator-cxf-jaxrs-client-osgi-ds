@@ -5,13 +5,10 @@ import org.openapitools.codegen.CliOption;
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.SupportingFile;
 import org.openapitools.codegen.languages.JavaCXFClientCodegen;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 public class JavaCXFClientOsgiDsCodegen extends JavaCXFClientCodegen {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JavaCXFClientOsgiDsCodegen.class);
     public static final String ACTIVATOR_PACKAGE = "activatorPackage";
     public static final String ACTIVATOR_DS_CONFIGURATION_REQUIRED = "activatorDsConfigurationRequired";
     public static final String USE_GZIP_FEATURE = "useGzipFeature";
@@ -26,7 +23,7 @@ public class JavaCXFClientOsgiDsCodegen extends JavaCXFClientCodegen {
         super();
         outputFolder = "generated-code/JavaJaxRS-CXF-Osgi-Ds";
 
-        cliOptions.add(CliOption.newString(ACTIVATOR_PACKAGE, "Default activator package"));
+        cliOptions.add(new CliOption(ACTIVATOR_PACKAGE, "Default activator package").defaultValue(this.getActivatorPackage()));
         cliOptions.add(CliOption.newBoolean(ACTIVATOR_DS_CONFIGURATION_REQUIRED, "Activator DS configuration required"));
         cliOptions.add(CliOption.newBoolean(USE_GZIP_FEATURE, "Use Gzip Feature"));
         cliOptions.add(CliOption.newBoolean(USE_LOGGING_FEATURE, "Use Logging Feature"));
@@ -46,14 +43,26 @@ public class JavaCXFClientOsgiDsCodegen extends JavaCXFClientCodegen {
     public void processOpts() {
         super.processOpts();
 
-        this.setUseGzipFeature(convertPropertyToBooleanAndWriteBack(USE_GZIP_FEATURE));
-        this.setActivatorDsConfigurationRequired(convertPropertyToBooleanAndWriteBack(ACTIVATOR_DS_CONFIGURATION_REQUIRED));
-        this.setUseLoggingFeature(convertPropertyToBooleanAndWriteBack(USE_LOGGING_FEATURE));
-
-        if (!additionalProperties.containsKey(ACTIVATOR_PACKAGE)) {
-            additionalProperties.put(ACTIVATOR_PACKAGE, activatorPackage);
+        if (additionalProperties.containsKey(ACTIVATOR_PACKAGE)) {
+            this.setActivatorPackage((String) additionalProperties.get(ACTIVATOR_PACKAGE));
+        } else {
+            additionalProperties.put(ACTIVATOR_PACKAGE, getActivatorPackage());
         }
-        this.setActivatorPackage((String) additionalProperties.get(ACTIVATOR_PACKAGE));
+
+        if (additionalProperties.containsKey(ACTIVATOR_DS_CONFIGURATION_REQUIRED)) {
+            boolean activatorDsConfigurationRequired = convertPropertyToBooleanAndWriteBack(ACTIVATOR_DS_CONFIGURATION_REQUIRED);
+            this.setActivatorDsConfigurationRequired(activatorDsConfigurationRequired);
+        }
+
+        if (additionalProperties.containsKey(USE_GZIP_FEATURE)) {
+            boolean useGzipFeature = convertPropertyToBooleanAndWriteBack(USE_GZIP_FEATURE);
+            this.setUseGzipFeature(useGzipFeature);
+        }
+
+        if (additionalProperties.containsKey(USE_LOGGING_FEATURE)) {
+            boolean useLoggingFeature = convertPropertyToBooleanAndWriteBack(USE_LOGGING_FEATURE);
+            this.setUseLoggingFeature(useLoggingFeature);
+        }
 
         supportingFiles.clear(); // Don't need extra files provided by AbstractJAX-RS & Java Codegen
 
@@ -86,14 +95,14 @@ public class JavaCXFClientOsgiDsCodegen extends JavaCXFClientCodegen {
 
 
     public String activatorFileFolder() {
-        return (outputFolder + File.separator + sourceFolder + File.separator + activatorPackage().replace('.', File.separatorChar)).replace('/', File.separatorChar);
+        return (outputFolder + File.separator + sourceFolder + File.separator + getActivatorPackage().replace('.', File.separatorChar)).replace('/', File.separatorChar);
     }
 
     public String activatorFolder() {
-        return (sourceFolder + File.separator + activatorPackage().replace('.', File.separatorChar)).replace('/', File.separatorChar);
+        return (sourceFolder + File.separator + getActivatorPackage().replace('.', File.separatorChar)).replace('/', File.separatorChar);
     }
 
-    public String activatorPackage() {
+    public String getActivatorPackage() {
         return activatorPackage;
     }
 
