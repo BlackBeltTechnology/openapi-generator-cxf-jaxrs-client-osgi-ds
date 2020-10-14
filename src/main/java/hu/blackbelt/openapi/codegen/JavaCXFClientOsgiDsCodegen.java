@@ -15,6 +15,7 @@ public class JavaCXFClientOsgiDsCodegen extends JavaCXFClientCodegen {
     public static final String USE_LOGGING_FEATURE = "useLoggingFeature";
 
     protected String activatorPackage = "org.openapitools.activator";
+
     protected Boolean activatorConfigurationRequired = false;
     protected boolean useGzipFeature = false;
     protected boolean useLoggingFeature = false;
@@ -52,16 +53,22 @@ public class JavaCXFClientOsgiDsCodegen extends JavaCXFClientCodegen {
         if (additionalProperties.containsKey(ACTIVATOR_DS_CONFIGURATION_REQUIRED)) {
             boolean activatorDsConfigurationRequired = convertPropertyToBooleanAndWriteBack(ACTIVATOR_DS_CONFIGURATION_REQUIRED);
             this.setActivatorDsConfigurationRequired(activatorDsConfigurationRequired);
+        } else {
+            writePropertyBack(ACTIVATOR_DS_CONFIGURATION_REQUIRED, this.getActivatorConfigurationRequired());
         }
 
         if (additionalProperties.containsKey(USE_GZIP_FEATURE)) {
             boolean useGzipFeature = convertPropertyToBooleanAndWriteBack(USE_GZIP_FEATURE);
             this.setUseGzipFeature(useGzipFeature);
+        } else {
+            writePropertyBack(USE_GZIP_FEATURE, this.getUseGzipFeature());
         }
 
         if (additionalProperties.containsKey(USE_LOGGING_FEATURE)) {
             boolean useLoggingFeature = convertPropertyToBooleanAndWriteBack(USE_LOGGING_FEATURE);
             this.setUseLoggingFeature(useLoggingFeature);
+        } else {
+            writePropertyBack(USE_LOGGING_FEATURE, this.getUseLoggingFeature());
         }
 
         supportingFiles.clear(); // Don't need extra files provided by AbstractJAX-RS & Java Codegen
@@ -120,6 +127,18 @@ public class JavaCXFClientOsgiDsCodegen extends JavaCXFClientCodegen {
 
     public void setActivatorDsConfigurationRequired(boolean activatorConfigurationRequired) {
         this.activatorConfigurationRequired = activatorConfigurationRequired;
+    }
+
+    public Boolean getActivatorConfigurationRequired() {
+        return activatorConfigurationRequired;
+    }
+
+    public Boolean getUseGzipFeature() {
+        return useGzipFeature;
+    }
+
+    public Boolean getUseLoggingFeature() {
+        return useLoggingFeature;
     }
 
 }
