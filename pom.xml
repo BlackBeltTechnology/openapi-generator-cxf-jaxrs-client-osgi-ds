@@ -20,6 +20,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <openapi-codegen-version>4.2.2</openapi-codegen-version>
         <deployOnly>false</deployOnly>
+        <karaf-version>4.3.4</karaf-version>
         <revision>1.0.2-SNAPSHOT</revision>
     </properties>
 
