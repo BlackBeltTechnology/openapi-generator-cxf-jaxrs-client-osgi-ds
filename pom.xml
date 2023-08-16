@@ -79,7 +79,7 @@
 
     <!-- i am not sure if i have to change the version here or should i put this into the properties -->
     <prerequisites>
-        <maven>3.8.3</maven>
+        <maven>3.9.4</maven>
     </prerequisites>
 
     <dependencyManagement>
