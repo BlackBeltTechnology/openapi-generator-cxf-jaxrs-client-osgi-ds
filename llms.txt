@@ -1,0 +1,36 @@
+# OpenAPI Generator CXF JAX-RS Client OSGi DS
+
+> An OpenAPI Generator plugin that produces CXF JAX-RS client stubs packaged as OSGi Declarative Services bundles.
+
+Key facts:
+- Java 21, Maven 3.9.4+ with Maven Wrapper
+- Single-module project built on OpenAPI Generator 4.2.2
+- Extends `JavaCXFClientCodegen` with custom Mustache templates for OSGi DS activator and Maven POM generation
+- Generated activator creates CXF client proxies via `JAXRSClientFactory` and registers each API interface as an OSGi service
+- Runtime stack: Apache CXF 3.3.0, Jackson 2.9.9, OSGi Core + Compendium 6.0.0
+- License: Apache License 2.0
+
+## Docs
+
+- [README.md](README.md): Project overview, architecture diagrams, usage examples (Maven, Gradle, CLI), and configuration options
+- [AGENTS.md](AGENTS.md): Developer guide with build commands, directory structure, technology stack, and coding conventions
+- [CONTRIBUTING.md](CONTRIBUTING.md): Development setup and pull request guidelines
+- [.github/CIFLOW.md](.github/CIFLOW.md): CI/CD pipeline and branch strategy details
+
+## Components
+
+- [src/main/java/hu/blackbelt/openapi/codegen/JavaCXFClientOsgiDsCodegen.java](src/main/java/hu/blackbelt/openapi/codegen/JavaCXFClientOsgiDsCodegen.java): The sole generator class — extends JavaCXFClientCodegen to add OSGi DS support, registered via Java SPI
+- [src/main/resources/JavaJaxRS/cxf/osgi/ds/modelServiceActivator.mustache](src/main/resources/JavaJaxRS/cxf/osgi/ds/modelServiceActivator.mustache): Mustache template that generates the OSGi DS activator (ClientApiServiceActivator.java)
+- [src/main/resources/JavaJaxRS/cxf/osgi/ds/pom.mustache](src/main/resources/JavaJaxRS/cxf/osgi/ds/pom.mustache): Mustache template that generates the output project's POM with bundle packaging
+- [src/main/resources/META-INF/services/org.openapitools.codegen.CodegenConfig](src/main/resources/META-INF/services/org.openapitools.codegen.CodegenConfig): Java SPI registration for OpenAPI Generator discovery
+
+## Tests
+
+- [src/test/java/hu/blackbelt/openapi/SampleRunner.java](src/test/java/hu/blackbelt/openapi/SampleRunner.java): Unit test that programmatically runs the generator against a sample OpenAPI spec
+- [src/it/k8s/](src/it/k8s/): Maven Invoker integration test that verifies generated code compiles and passes tests
+
+## Optional
+
+- [pom.xml](pom.xml): Project build configuration with CI-friendly ${revision} versioning (1.0.2-SNAPSHOT)
+- [.github/workflows/build.yml](.github/workflows/build.yml): CI/CD pipeline (build, test, deploy, tag)
+- [LICENSE.txt](LICENSE.txt): Apache License 2.0 text
